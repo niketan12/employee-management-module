@@ -1,0 +1,34 @@
+<?php
+
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\EmployeeController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', fn () => view('welcome'))->name('home');
+
+Route::middleware('guest')->group(function () {
+    Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
+    Route::post('register', [RegisteredUserController::class, 'store']);
+
+    Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
+    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+
+    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
+    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
+
+    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
+    Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.update');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('dashboard', fn () => view('dashboard'))->name('dashboard');
+    Route::resource('employees', EmployeeController::class)->except(['show']);
+    Route::get('employees/managers/by-department', [EmployeeController::class, 'getManagersByDepartment'])->name('employees.managers.by-department');
+});
+
+Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('logout');
