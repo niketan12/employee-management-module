@@ -113,15 +113,19 @@ body {
                                 <td><a href="#" class="text-primary">{{ $employeeRow->name }}</a></td>
                                 <td>{{ $employeeRow->employee_code }}</td>
                                 <td>{{ $employeeRow->department_name ?? '-' }}</td>
-                                <td>{{ $employeeRow->role?->name === config('constants.roles.manager') ? 'Self' : ($employeeRow->manager?->name ?? '-') }}</td>
+                                <td>{{ $employeeRow->role_name === config('constants.roles.manager') ? 'Self' : ($employeeRow->manager_name ?? '-') }}</td>
                                 <td>{{ optional($employeeRow->joined_date)->format('m/d/Y') ?? '-' }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-primary me-2" title="Edit">
+                                    @if($employeeRow->role_id != 4)
+                                    <button class="btn btn-sm btn-outline-primary me-2 edit-btn" title="Edit" data-id="{{ $employeeRow->id }}">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-outline-danger" title="Delete">
+                                    <button class="btn btn-sm btn-outline-danger delete-btn" title="Delete" data-id="{{ $employeeRow->id }}">
                                         <i class="bi bi-trash"></i>
                                     </button>
+                                    @else
+                                    <span class="text-muted">N/A</span>
+                                    @endif
                                 </td>
                             </tr>
                         @empty

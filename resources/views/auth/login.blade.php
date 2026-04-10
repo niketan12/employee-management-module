@@ -150,7 +150,7 @@ body {
     <div class="card login-card">
         <div class="card-body">
             <div class="login-title">
-                <h1>USER LOGIN</h1>
+                <h1>ADMIN LOGIN</h1>
             </div>
             <form method="POST" action="{{ route('login') }}">
                 @csrf

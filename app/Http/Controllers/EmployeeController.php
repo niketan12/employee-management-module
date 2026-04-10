@@ -20,10 +20,10 @@ class EmployeeController extends Controller
 
     public function index(Request $request): View
     {
-        $employees = Employee::with(['role'])
-            ->leftJoin('departments', 'employees.department_id', '=', 'departments.id')
+        $employees = Employee::leftJoin('departments', 'employees.department_id', '=', 'departments.id')
             ->leftJoin('employees as managers', 'employees.manager_id', '=', 'managers.id')
-            ->select('employees.*', 'departments.name as department_name', 'managers.name as manager_name')
+            ->leftJoin('roles', 'employees.role_id', '=', 'roles.id')
+            ->select('employees.*', 'departments.name as department_name', 'managers.name as manager_name', 'roles.name as role_name')
             ->where('employees.is_deleted', 0)
             ->when($request->filled('search'), fn ($query) => $query->where('employees.name', 'like', '%' . $request->search . '%'))
             ->when($request->filled('department_id'), fn ($query) => $query->where('employees.department_id', $request->department_id))
